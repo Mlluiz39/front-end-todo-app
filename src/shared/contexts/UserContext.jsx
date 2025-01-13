@@ -6,11 +6,13 @@ export const UserContext = createContext({})
 
 export const UserProvider = ({ children }) => {
   // Definindo os estados para o usuário e a validade do token
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || {})
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem('user')) || {}
+  )
   const [tokenValid, setTokenValid] = useState(!!localStorage.getItem('token'))
 
   // Função para login que armazena o token e o usuário no estado e no localStorage
-  const login = async (userInfo) => {
+  const login = async userInfo => {
     try {
       if (userInfo?.token) {
         localStorage.setItem('token', userInfo.token)
@@ -34,7 +36,7 @@ export const UserProvider = ({ children }) => {
     setUser({})
     localStorage.removeItem('user')
     localStorage.removeItem('token')
-    setTokenValid(false) // Marca o token como inválido
+    setTokenValid(false)
   }
 
   // Verifica se há um usuário e um token armazenados no localStorage ao iniciar
@@ -57,5 +59,5 @@ export const UserProvider = ({ children }) => {
 }
 
 UserProvider.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 }

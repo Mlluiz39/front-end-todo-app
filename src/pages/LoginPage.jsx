@@ -3,6 +3,9 @@ import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 
+import { GoogleLogin } from '@react-oauth/google'
+import { jwtDecode } from "jwt-decode";
+
 import useUser from '@/hooks/useUser'
 import HomeLogin from '@/pages/HomeLogin'
 import { api } from '@/shared/services/api'
@@ -14,20 +17,31 @@ const LoginPage = () => {
   const navigate = useNavigate()
 
   const schema = yup.object().shape({
-    email: yup.string().email('Digite um email valido!').required('O email é obrigatório!'),
-    password: yup.string().required('A senha é obrigatória').min(6, 'A senha deve ter no mínimo 6 caracteres!')
+    email: yup
+      .string()
+      .email('Digite um email valido!')
+      .required('O email é obrigatório!'),
+    password: yup
+      .string()
+      .required('A senha é obrigatória')
+      .min(6, 'A senha deve ter no mínimo 6 caracteres!'),
   })
 
-  const { register, handleSubmit, formState: { errors } } = useForm(
-    { resolver: yupResolver(schema) }
-  )
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(schema) })
 
   const handleLogin = async clientData => {
     try {
-      const { status, data } = await api.post('auth/login', {
-        email: clientData.email,
-        password: clientData.password
-      }, { validateStatus: () => true }
+      const { status, data } = await api.post(
+        'auth/login',
+        {
+          email: clientData.email,
+          password: clientData.password,
+        },
+        { validateStatus: () => true }
       )
       if (status === 200 || status === 201) {
         login(data)
@@ -72,7 +86,9 @@ const LoginPage = () => {
                       placeholder="Email"
                       {...register('email', { required: true })}
                     />
-                      <p className='text-red-700 mx-1 mt-1'>{errors.email?.message}</p>
+                    <p className="text-red-700 mx-1 mt-1">
+                      {errors.email?.message}
+                    </p>
                   </div>
                   <div className="flex items-center">
                     <input
@@ -84,7 +100,9 @@ const LoginPage = () => {
                       {...register('password', { required: true })}
                     />
                   </div>
-                    <p className='text-red-700 mx-1 mt-1'>{errors.password?.message}</p>
+                  <p className="text-red-700 mx-1 mt-1">
+                    {errors.password?.message}
+                  </p>
                   <div className="flex justify-center items-center gap-8 my-4 ">
                     <div className="flex items-center justify-center">
                       <input
@@ -126,7 +144,7 @@ const LoginPage = () => {
                         className="mx-2 pt-3 text-red-600 font-medium hover:text-red-700
                       focus:text-red-700 transition duration-500 ease-in-out transform hover:-translate-x hover:scale-105"
                       >
-                        Cadastre-se
+                        Cadastre-se ou
                       </Link>
                     </div>
                   </div>
