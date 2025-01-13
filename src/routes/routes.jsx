@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router-dom'
 
 import About from '@/pages/About'
 import AddTask from '@/pages/AddTask'
-import Home from '@/pages/Home'
+import Home from '@/pages/Hero'
 import ListTask from '@/pages/ListTask'
 import LoginPage from '@/pages/LoginPage'
 import NotFound from '@/pages/NotFound'
