@@ -10,7 +10,9 @@ const HomeLogin = () => {
       <section className="flex justify-between items-center bg-indigo-600 p-3">
         <div className="flex items-center text-xl">
           <FaCalendarAlt className="text-white" />
-          <h1 className="text-lg font-semibold text-white mx-3">TodoApp</h1>
+          <Link to="/">
+            <h1 className="text-lg font-semibold text-white mx-3">TodoApp</h1>
+          </Link>
         </div>
         <div className="flex items-center justify-center">
           <nav className="p-3">
