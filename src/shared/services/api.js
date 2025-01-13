@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'http://localhost:3333'
+  baseURL: 'https://project-todo-8nq3.onrender.com'
 })
 
 api.interceptors.request.use(async config => {
