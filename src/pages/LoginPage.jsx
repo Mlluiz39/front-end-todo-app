@@ -36,7 +36,7 @@ const LoginPage = () => {
   const handleLogin = async clientData => {
     try {
       const { status, data } = await api.post(
-        'auth/login',
+        '/auth/login',
         {
           email: clientData.email,
           password: clientData.password,

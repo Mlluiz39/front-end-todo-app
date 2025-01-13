@@ -50,7 +50,7 @@ const ListTask = () => {
 
   const handleEditSave = async id => {
     try {
-      const response = await api.put(`todos/${id}`, editData)
+      const response = await api.put(`/todos/${id}`, editData)
       setTasks(
         tasks.map(task =>
           task.id === id ? { ...task, ...response.data } : task
@@ -70,7 +70,7 @@ const ListTask = () => {
 
   const handleDelete = async id => {
     try {
-      await api.delete(`todos/${id}`)
+      await api.delete(`/todos/${id}`)
       toast.success('Tarefa excluída com sucesso')
       setTasks(tasks.filter(task => task.id !== id))
     } catch (error) {
@@ -81,7 +81,7 @@ const ListTask = () => {
   const toggleDone = async id => {
     try {
       const task = tasks.find(task => task.id === id)
-      await api.put(`todos/${id}`, { ...task, completed: !task.completed })
+      await api.put(`/todos/${id}`, { ...task, completed: !task.completed })
       setTasks(
         tasks.map(task =>
           task.id === id ? { ...task, completed: !task.completed } : task
