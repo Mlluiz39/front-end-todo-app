@@ -69,12 +69,43 @@ const ListTask = () => {
   }
 
   const handleDelete = async id => {
+    const confirmDelete = () =>
+      toast(
+        ({ closeToast }) => (
+          <div className="flex flex-col">
+            <p>Você tem certeza que deseja excluir esta tarefa?</p>
+            <div className="flex justify-end gap-2 mt-3">
+              <button
+                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700 transition"
+                onClick={() => {
+                  deleteTask(id)
+                  closeToast()
+                }}
+              >
+                Sim
+              </button>
+              <button
+                className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-700 transition"
+                onClick={closeToast}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        ),
+        { autoClose: false }
+      )
+
+    confirmDelete()
+  }
+
+  const deleteTask = async id => {
     try {
       await api.delete(`/todos/${id}`)
       toast.success('Tarefa excluída com sucesso')
       setTasks(tasks.filter(task => task.id !== id))
     } catch (error) {
-      toast.error('Erro ao excluir tarefa')
+      toast.error('Erro ao atualizar tarefa')
     }
   }
 
@@ -92,108 +123,112 @@ const ListTask = () => {
     }
   }
 
-    return (
-      <>
-        <HomeTask />
-        <div className="task-list p-4 max-w-3xl mx-auto">
-          {tasks.length === 0 ? (
-            <p className="text-center text-lg text-gray-500">
-              Nenhuma tarefa cadastrada
-            </p>
-          ) : (
-            tasks.map(task => (
-              <div
-                className="task-item bg-white border border-gray-200 p-4 rounded-lg shadow-sm mb-4 hover:bg-gray-50 transition overflow-auto break-words"
-                key={task.id}
-              >
-                {editingTaskId === task.id ? (
-                  <div className="task-edit">
-                    <input
-                      type="text"
-                      value={editData.title}
-                      onChange={e => handleEditChange('title', e.target.value)}
-                      className="w-full border p-2 rounded mb-2"
-                      placeholder="Título"
-                    />
-                    <textarea
-                      value={editData.description}
-                      onChange={e =>
-                        handleEditChange('description', e.target.value)
-                      }
-                      className="w-full border p-2 rounded mb-2"
-                      placeholder="Descrição"
-                    />
-                    <div className="flex gap-2">
+  return (
+    <>
+      <HomeTask />
+      <div className="task-list p-4 max-w-3xl mx-auto">
+        {tasks.length === 0 ? (
+          <p className="text-center text-lg text-gray-500">
+            Nenhuma tarefa cadastrada
+          </p>
+        ) : (
+          tasks.map(task => (
+            <div
+              className="task-item bg-white border border-gray-200 p-4 rounded-lg shadow-sm mb-4 hover:bg-gray-50 transition overflow-auto break-words"
+              key={task.id}
+            >
+              {editingTaskId === task.id ? (
+                <div className="task-edit">
+                  <input
+                    type="text"
+                    value={editData.title}
+                    onChange={e => handleEditChange('title', e.target.value)}
+                    className="w-full border p-2 rounded mb-2"
+                    placeholder="Título"
+                  />
+                  <textarea
+                    value={editData.description}
+                    onChange={e =>
+                      handleEditChange('description', e.target.value)
+                    }
+                    className="w-full border p-2 rounded mb-2"
+                    placeholder="Descrição"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      className="save-button bg-green-500 text-white py-1 px-3 rounded-lg hover:bg-green-700 transition"
+                      onClick={() => handleEditSave(task.id)}
+                    >
+                      Salvar
+                    </button>
+                    <button
+                      className="cancel-button bg-gray-500 text-white py-1 px-3 rounded-lg hover:bg-gray-700 transition"
+                      onClick={handleEditCancel}
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="task-header flex justify-between items-center">
+                    <h3
+                      className={`text-xl font-semibold ${
+                        task.completed
+                          ? 'line-through text-gray-400'
+                          : 'text-sky-800'
+                      }`}
+                    >
+                      {task.title}
+                    </h3>
+                    <div className="flex flex-col gap-3">
                       <button
-                        className="save-button bg-green-500 text-white py-1 px-3 rounded-lg hover:bg-green-700 transition"
-                        onClick={() => handleEditSave(task.id)}
+                        className="delete-button bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-700 transition"
+                        onClick={() => handleDelete(task.id)}
                       >
-                        Salvar
+                        Excluir
                       </button>
                       <button
-                        className="cancel-button bg-gray-500 text-white py-1 px-3 rounded-lg hover:bg-gray-700 transition"
-                        onClick={handleEditCancel}
+                        className="edit-button bg-amber-500 text-white py-1 px-3 rounded-lg hover:bg-amber-700 transition"
+                        onClick={() => handleEditClick(task.id, task)}
                       >
-                        Cancelar
+                        Editar
                       </button>
                     </div>
                   </div>
-                ) : (
-                  <>
-                    <div className="task-header flex justify-between items-center">
-                      <h3
-                        className={`text-xl font-semibold ${
-                          task.completed ? 'line-through text-gray-400' : 'text-sky-800'
-                        }`}
-                      >
-                        {task.title}
-                      </h3>
-                      <div className="flex flex-col gap-3">
-                        <button
-                          className="delete-button bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-700 transition"
-                          onClick={() => handleDelete(task.id)}
-                        >
-                          Excluir
-                        </button>
-                        <button
-                          className="edit-button bg-amber-500 text-white py-1 px-3 rounded-lg hover:bg-amber-700 transition"
-                          onClick={() => handleEditClick(task.id, task)}
-                        >
-                          Editar
-                        </button>
-                      </div>
-                    </div>
-                    <p
-                      className={`task-description mt-2 ${
-                        task.completed ? 'line-through text-gray-400' : 'text-gray-600'
+                  <p
+                    className={`task-description mt-2 ${
+                      task.completed
+                        ? 'line-through text-gray-400'
+                        : 'text-gray-600'
+                    }`}
+                  >
+                    {task.description}
+                  </p>
+                  <div className="task-footer flex items-center mt-4">
+                    <input
+                      type="checkbox"
+                      checked={task.completed}
+                      onChange={() => toggleDone(task.id)}
+                      className="mr-2 h-5 w-5"
+                    />
+                    <span
+                      className={`${
+                        task.completed ? 'text-gray-400' : 'text-gray-500'
                       }`}
                     >
-                      {task.description}
-                    </p>
-                    <div className="task-footer flex items-center mt-4">
-                      <input
-                        type="checkbox"
-                        checked={task.completed}
-                        onChange={() => toggleDone(task.id)}
-                        className="mr-2 h-5 w-5"
-                      />
-                      <span
-                        className={`${
-                          task.completed ? 'text-gray-400' : 'text-gray-500'
-                        }`}
-                      >
-                        {task.completed ? 'Concluída' : 'Pendente'}
-                      </span>
-                    </div>
-                  </>
-                )}
-              </div>
-            ))
-          )}
-        </div>
-        <ToastContainer />
-      </>
-    )
-  }
+                      {task.completed ? 'Concluída' : 'Pendente'}
+                    </span>
+                  </div>
+                </>
+              )}
+            </div>
+          ))
+        )}
+      </div>
+      <ToastContainer />
+    </>
+  )
+}
 
-  export default ListTask
+export default ListTask
