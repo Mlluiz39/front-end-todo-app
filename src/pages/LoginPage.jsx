@@ -3,9 +3,6 @@ import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 
-import { GoogleLogin } from '@react-oauth/google'
-import { jwtDecode } from "jwt-decode";
-
 import useUser from '@/hooks/useUser'
 import HomeLogin from '@/pages/HomeLogin'
 import { api } from '@/shared/services/api'
